@@ -71,7 +71,7 @@ spec:
     - name: httpport
       port: 8080
       targetPort: 8080
-      nodePort: 32000
+      nodePort: 30001
     - name: jnlpport
       port: 50000
       targetPort: 50000
