@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jenkins-deployment
+  name: {{ .Values.Deployment.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.Deployment.replicas }}
   selector:
     matchLabels:
-      app: jenkins
+      app: {{ .Values.Deployment.app }}
   template:
     metadata:
       labels:
-        app: jenkins
+        app: {{ .Values.Deployment.app }}
     spec:
-      serviceAccountName: jenkins-admin
+      serviceAccountName: {{ .Values.Deployment.serviceAccountName }}
       securityContext:
             fsGroup: 1000 
             runAsUser: 1000
       containers:
-        - name: jenkins
-          image: jenkins/jenkins:lts
+        - name: {{ .Values.Deployment.app }}
+          image: {{ .Values.Deployment.image }}
           resources:
             limits:
               memory: "2Gi"
@@ -58,20 +58,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: jenkins-service
+  name: {{ .Values.Service.name }}
   annotations:
       prometheus.io/scrape: 'true'
       prometheus.io/path:   /
       prometheus.io/port:   '8080'
 spec:
   selector: 
-    app: jenkins
+    app: {{ .Values.Service.app }}
   type: NodePort  
   ports:
     - name: httpport
       port: 8080
       targetPort: 8080
-      nodePort: 30001
+      nodePort: {{ .Values.Service.nodePort }}
     - name: jnlpport
       port: 50000
       targetPort: 50000
@@ -79,10 +79,47 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jenkins-pv-claim
+  name: {{ .Values.PersistentVolumeClaim.name }}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 50Gi
+      storage: {{ .Values.PersistentVolumeClaim.storage }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.ServiceAccount.name }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.Role.name }}
+  labels:
+    "app.kubernetes.io/name": 'jenkins'
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get","list","watch"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.RoleBinding.name }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: jenkins
+subjects:
+- kind: ServiceAccount
+  name: jenkins-admin

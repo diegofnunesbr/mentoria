@@ -1,0 +1,24 @@
+Deployment:
+  name: jenkins-deployment
+  replicas: 1
+  app: jenkins
+  serviceAccountName: jenkins-admin
+  image: jenkins/jenkins:lts
+
+Service:
+  name: jenkins-service
+  app: jenkins
+  nodePort: 30001
+
+PersistentVolumeClaim:
+  name: jenkins-pv-claim
+  storage: 50Gi
+
+ServiceAccount:
+  name: jenkins-admin
+
+Role:
+  name: jenkins
+
+RoleBinding:
+  name: jenkins-role-binding
