@@ -22,10 +22,17 @@ pipeline {
           volumes:
           - name: docker-sock
             hostPath:
-              path: /var/run/docker.sock    
+              path: /var/run/docker.sock
         '''
     }
   }
+    environment {
+        DOCKERHUB_USERNAME = 'diegofnunesbr'
+        DOCKERHUB_TOKEN = credentials('dockerhub')
+        IMAGE_NAME = 'testing-image'
+        IMAGE_TAG = 'latest'
+        CONTAINER_NAME = 'nginx'
+    }
   stages {
     stage('Clone') {
       steps {
@@ -33,7 +40,7 @@ pipeline {
           git branch: 'main', changelog: false, poll: false, url: 'https://mohdsabir-cloudside@bitbucket.org/mohdsabir-cloudside/java-app.git'
         }
       }
-    }  
+    }
     stage('Build-Jar-file') {
       steps {
         container('maven') {
@@ -44,21 +51,21 @@ pipeline {
     stage('Build-Docker-Image') {
       steps {
         container('docker') {
-          sh 'docker build -t diegofnunesbr/testing-image:latest .'
+          sh 'docker build -t $DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG .'
         }
       }
     }
     stage('Login-Into-Docker') {
       steps {
         container('docker') {
-          sh 'docker login -u diegofnunesbr -p dckr_pat_V6QjmA0wvFoiejUDuFkeyjtpN_I'
+          sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN'
       }
     }
     }
      stage('Push-Images-Docker-to-DockerHub') {
       steps {
         container('docker') {
-          sh 'docker push diegofnunesbr/testing-image:latest'
+          sh 'docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG'
       }
     }
      }
