@@ -48,7 +48,7 @@ pipeline {
         }
       }
     }
-    stage('Build-Docker) {
+    stage('Build-Docker') {
       steps {
         container('docker') {
           sh 'docker build -t $DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG .'
