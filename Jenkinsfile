@@ -17,8 +17,8 @@ pipeline {
             - cat
             tty: true
             volumeMounts:
-             - mountPath: /var/run/docker.sock
-               name: docker-sock
+            - mountPath: /var/run/docker.sock
+              name: docker-sock
           volumes:
           - name: docker-sock
             hostPath:
@@ -62,13 +62,13 @@ pipeline {
       }
     }
     }
-     stage('Push-Images-Docker-to-DockerHub') {
+    stage('Push-Images-Docker-to-DockerHub') {
       steps {
         container('docker') {
           sh 'docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG'
       }
     }
-     }
+    }
   }
     post {
       always {
