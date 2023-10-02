@@ -41,28 +41,28 @@ pipeline {
         }
       }
     }
-    stage('Build-Jar-file') {
+    stage('Build-Maven') {
       steps {
         container('maven') {
           sh 'mvn package'
         }
       }
     }
-    stage('Build-Docker-Image') {
+    stage('Build-Docker) {
       steps {
         container('docker') {
           sh 'docker build -t $DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG .'
         }
       }
     }
-    stage('Login-Into-Docker') {
+    stage('Login-Docker') {
       steps {
         container('docker') {
           sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN'
       }
     }
     }
-    stage('Push-Images-Docker-to-DockerHub') {
+    stage('Push-Docker-to-DockerHub') {
       steps {
         container('docker') {
           sh 'docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG'
