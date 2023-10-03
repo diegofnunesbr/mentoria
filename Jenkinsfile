@@ -53,7 +53,7 @@ pipeline {
     stage('RUN') {
       steps {
         container('docker') {
-          sh 'docker run -d -p 8080:80 --name nginx2 nginx:latest'
+          sh 'docker run -d -p 8080:80 --name nginx22 nginx:latest'
       }
     }
     }
