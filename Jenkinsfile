@@ -26,7 +26,6 @@ pipeline {
         DOCKERHUB_TOKEN = credentials('dockerhub')
         IMAGE_NAME = 'nginx'
         IMAGE_TAG = 'latest'
-        CONTAINER_NAME = 'nginx'
     }
   stages {
     stage('Build') {
@@ -50,18 +49,11 @@ pipeline {
       }
     }
     }
-    stage('Run') {
-      steps {
-        container('docker') {
-          sh 'docker run -d -p 8080:80 --name nginx23 nginx:latest'
-      }
-    }
-    }
   }
     post {
       always {
         container('docker') {
-          sh 'tail -f /dev/null'
+          sh 'docker logout'
       }
       }
     }
