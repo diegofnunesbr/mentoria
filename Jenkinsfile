@@ -26,7 +26,7 @@ pipeline {
         DOCKERHUB_TOKEN = credentials('dockerhub')
         IMAGE_NAME = 'nginx'
         IMAGE_TAG = 'latest'
-        CONTAINER_NAME = 'nginx'
+        CONTAINER_NAME = 'nginx2'
     }
   stages {
     stage('Build-Nginx') {
