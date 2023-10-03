@@ -26,36 +26,43 @@ pipeline {
         DOCKERHUB_TOKEN = credentials('dockerhub')
         IMAGE_NAME = 'nginx'
         IMAGE_TAG = 'latest'
-        CONTAINER_NAME = 'nginx2'
+        CONTAINER_NAME = 'nginx'
     }
   stages {
-    stage('Build-Nginx') {
+    stage('Build') {
       steps {
         container('docker') {
           sh 'docker build -t $DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG .'
         }
       }
     }
-    stage('Login-Docker') {
+    stage('Login') {
       steps {
         container('docker') {
           sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN'
       }
     }
     }
-    stage('Push-Docker-to-DockerHub') {
+    stage('Push') {
       steps {
         container('docker') {
           sh 'docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG'
       }
     }
     }
-    stage('RUN') {
+    stage('Run') {
       steps {
         container('docker') {
-          sh 'docker run -d -p 8080:80 --name nginx22 nginx:latest'
+          sh 'docker run -d -p 8080:80 --name nginx23 nginx:latest'
       }
     }
     }
   }
+    post {
+      always {
+        container('docker') {
+          sh 'tail -f /dev/null'
+      }
+      }
+    }
 }
