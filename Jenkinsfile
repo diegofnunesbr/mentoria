@@ -24,19 +24,11 @@ pipeline {
     environment {
         DOCKERHUB_USERNAME = 'diegofnunesbr'
         DOCKERHUB_TOKEN = credentials('dockerhub')
-        IMAGE_NAME = 'testing-image'
+        IMAGE_NAME = 'nginx'
         IMAGE_TAG = 'latest'
-        CONTAINER_NAME = 'nginx'
     }
   stages {
     stage('Build-Nginx') {
-      steps {
-        container('docker') {
-          sh 'docker build -t nginx:latest .'
-        }
-      }
-    }
-    stage('Build-Docker') {
       steps {
         container('docker') {
           sh 'docker build -t $DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG .'
