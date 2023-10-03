@@ -49,6 +49,13 @@ pipeline {
       }
     }
     }
+    stage('RUN') {
+      steps {
+        container('docker') {
+          sh 'docker run -d -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME:$IMAGE_TAG'
+      }
+    }
+    }
   }
     post {
       always {
