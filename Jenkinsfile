@@ -6,11 +6,6 @@ pipeline {
         kind: Pod
         spec:
           containers:
-          - name: maven
-            image: maven:alpine
-            command:
-            - cat
-            tty: true
           - name: docker
             image: docker:latest
             command:
@@ -34,17 +29,10 @@ pipeline {
         CONTAINER_NAME = 'nginx'
     }
   stages {
-    stage('Clone') {
+    stage('Build-Nginx') {
       steps {
-        container('maven') {
-          git branch: 'main', changelog: false, poll: false, url: 'https://mohdsabir-cloudside@bitbucket.org/mohdsabir-cloudside/java-app.git'
-        }
-      }
-    }
-    stage('Build-Maven') {
-      steps {
-        container('maven') {
-          sh 'mvn package'
+        container('docker') {
+          sh 'docker build -t nginx:latest .'
         }
       }
     }
