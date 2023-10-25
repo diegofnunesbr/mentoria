@@ -13,7 +13,7 @@ Service:
 Ingress:
   name: jenkins-ingress
   host: jenkins.local
-  
+
 PersistentVolumeClaim:
   name: jenkins-pv-claim
   storage: 50Gi
