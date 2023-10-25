@@ -1,19 +1,18 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jenkins-ingress
-  namespace: mentoria
-  annotations:
+  name: {{ .Values.Ingress.name }}
+    annotations:
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-  - host: jenkins.local
+  - host: {{ .Values.Ingress.host }}
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: jenkins-service
+            name: {{ .Values.Service.name }}
             port:
               number: 8080
