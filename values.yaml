@@ -13,8 +13,7 @@ Service:
 Ingress:
   name: jenkins-ingress
   host: jenkins.local
-  nodePort: 30001
-
+  
 PersistentVolumeClaim:
   name: jenkins-pv-claim
   storage: 50Gi
