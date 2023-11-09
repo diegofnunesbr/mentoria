@@ -23,7 +23,7 @@ pipeline {
   }
     environment {
         DOCKERHUB_USERNAME = 'diegofnunesbr'
-        DOCKERHUB_TOKEN = credentials('dockerhub')
+        DOCKERHUB_TOKEN = credentials('diegofnunesbr')
         IMAGE_NAME = 'nginx'
         IMAGE_TAG = 'latest'
     }
